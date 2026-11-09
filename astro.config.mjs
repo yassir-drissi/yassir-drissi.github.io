@@ -14,7 +14,8 @@ export default defineConfig({
     enabled: false,
   },
   site: SITE_URL,
-  base: undefined,
+  base: '/',
+  trailingSlash: 'always',
   compressHTML: true,
   image: {
     responsiveStyles: true,
@@ -30,7 +31,8 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
-      filter: (page) => !page.includes('/dev/') && !page.includes('/qa/'),
+      filter: (page) => !page.includes('/dev/') && !page.includes('/qa/') && !page.includes('/404'),
+      i18n: { defaultLocale: 'fr', locales: { fr: 'fr-FR', en: 'en-US' } },
       serialize(item) {
         return { ...item, lastmod: new Date().toISOString() };
       },

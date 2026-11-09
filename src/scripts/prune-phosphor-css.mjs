@@ -35,9 +35,17 @@ function collectUsedIcons() {
   return used;
 }
 
+// Le CSS minifié regroupe les icônes de même contenu dans une seule règle
+// (.ph.ph-a:before,.ph.ph-b:before{content:…}) : on lit chaque sélecteur de la liste.
+const GROUPED_RULE_RE = /([^{}]+)\{[^}]*?content\s*:[^}]*\}/gi;
+const ICON_SELECTOR_RE = /\.ph\.ph-([a-z0-9-]+):before/gi;
+
 function findIconSelectors(css) {
   const selectors = new Set();
   for (const match of css.matchAll(ICON_RULE_RE)) selectors.add(match[1].toLowerCase());
+  for (const rule of css.matchAll(GROUPED_RULE_RE)) {
+    for (const icon of rule[1].matchAll(ICON_SELECTOR_RE)) selectors.add(icon[1].toLowerCase());
+  }
   return selectors;
 }
 

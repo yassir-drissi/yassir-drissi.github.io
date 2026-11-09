@@ -11,6 +11,8 @@ const PRUNABLE_DIRS = [
   'images',
   'images-webp',
   'videos',
+  // Sources JPEG qu'Astro recopie à côté des WebP générés par astro:assets, sans les référencer.
+  'assets',
   'assets/images',
   'assets/images-webp',
   'assets/videos',

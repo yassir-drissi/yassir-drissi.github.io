@@ -1,0 +1,28 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Section from '@components/ui/layout/Section.astro';
+import Container from '@components/ui/layout/Container.astro';
+import { legalSections } from '@data/portfolio/legal';
+import { getNovaCopy, type NovaLocale } from '@utils/nova-i18n';
+
+interface Props {
+  locale: NovaLocale;
+}
+
+const { locale } = Astro.props;
+const ui = getNovaCopy(locale);
+---
+
+<Layout locale={locale} title={`${ui.legal.title} — Yassir Drissi`} description={ui.legal.title}>
+  <Section tone="page" class="pb-20 pt-8">
+    <Container class="w-full max-w-3xl px-[clamp(1.25rem,4vw,2rem)]">
+      <h1 class="m-0 font-heading text-[clamp(2rem,5vw,3rem)] font-bold tracking-[-0.04em]">{ui.legal.title}</h1>
+      {legalSections.map((section) => (
+        <section class="mt-10">
+          <h2 class="m-0 font-heading text-xl font-bold">{section.title[locale]}</h2>
+          <p class="m-0 mt-3 leading-relaxed ui-text-on-light-subtle">{section.body[locale]}</p>
+        </section>
+      ))}
+    </Container>
+  </Section>
+</Layout>

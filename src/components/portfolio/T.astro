@@ -1,0 +1,14 @@
+---
+// Affiche un texte ; s'il commence par "TODO", il apparaît comme une étiquette
+// orange pour repérer les informations à compléter.
+import { isTodo } from '@data/portfolio/types';
+
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+const todo = isTodo(text);
+---
+
+{todo ? <span class="pf-todo">{text}</span> : <Fragment>{text}</Fragment>}

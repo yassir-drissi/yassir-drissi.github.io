@@ -1,27 +1,36 @@
 ---
-import { getNovaCopy, getNovaLocalePath, type NovaLocale } from '@utils/nova-i18n';
+// Sélecteur FR / EN : renvoie vers la page équivalente dans l'autre langue
+// (ex. /projets/hayati/ <-> /en/projects/hayati/).
+import { getNovaCopy, translatePath, type NovaLocale } from '@utils/nova-i18n';
 
 interface Props {
   locale?: NovaLocale;
 }
 
-const { locale = 'pl' } = Astro.props as Props;
+const { locale = 'fr' } = Astro.props as Props;
 const copy = getNovaCopy(locale).navigation;
+// Sur la page 404 (qui n'existe qu'à la racine), le sélecteur renvoie vers l'accueil de chaque langue.
+const pathname = /^\/404(\.html|\/)?$/.test(Astro.url.pathname) ? '/' : Astro.url.pathname;
+const options: Array<{ code: NovaLocale; label: string; lang: string }> = [
+  { code: 'fr', label: 'FR', lang: 'fr' },
+  { code: 'en', label: 'EN', lang: 'en' },
+];
 ---
 
-<div class="nova-language-switch" aria-label={copy.languageLabel}>
-  <a
-    href={getNovaLocalePath('pl')}
-    class:list={['nova-language-switch__link', locale === 'pl' && 'is-active']}
-    aria-current={locale === 'pl' ? 'page' : undefined}
-  >PL</a>
-  <span class="nova-language-switch__separator" aria-hidden="true">/</span>
-  <a
-    href={getNovaLocalePath('en')}
-    class:list={['nova-language-switch__link', locale === 'en' && 'is-active']}
-    aria-current={locale === 'en' ? 'page' : undefined}
-  >EN</a>
-</div>
+<nav class="nova-language-switch" aria-label={copy.languageLabel}>
+  {options.map((option, index) => (
+    <>
+      {index > 0 && <span class="nova-language-switch__separator" aria-hidden="true">/</span>}
+      <a
+        href={translatePath(pathname, option.code)}
+        hreflang={option.lang}
+        lang={option.lang}
+        class:list={['nova-language-switch__link', locale === option.code && 'is-active']}
+        aria-current={locale === option.code ? 'page' : undefined}
+      >{option.label}</a>
+    </>
+  ))}
+</nav>
 
 <style>
   .nova-language-switch {
@@ -38,9 +47,9 @@ const copy = getNovaCopy(locale).navigation;
 
   .nova-language-switch__link {
     border-radius: 0.25rem;
-    padding: 0.35rem 0.2rem;
+    padding: 0.5rem 0.25rem;
     color: inherit;
-    opacity: 0.48;
+    opacity: 0.6;
     text-decoration: none;
     transition: opacity 180ms ease, color 180ms ease;
   }
@@ -52,13 +61,8 @@ const copy = getNovaCopy(locale).navigation;
     opacity: 1;
   }
 
-  .nova-language-switch__link:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 3px;
-  }
-
   .nova-language-switch__separator {
-    opacity: 0.28;
+    opacity: 0.35;
   }
 
   @media (prefers-reduced-motion: reduce) {
