@@ -83,7 +83,7 @@ export const expertise: ExpertiseArea[] = [
       fr: 'Pipelines batch et streaming, modélisation analytique et mise en service des modèles.',
       en: 'Batch and streaming pipelines, analytics modelling and model serving.',
     },
-    tools: ['SQL', 'Airflow', 'Spark', 'Databricks', 'dbt', 'Snowflake', 'Kafka', 'Docker', 'FastAPI', 'Power BI', 'AWS'],
+    tools: ['SQL', 'Airflow', 'Spark', 'Databricks', 'dbt', 'Snowflake', 'Kafka', 'Docker', 'FastAPI', 'AWS'],
   },
 ];
 

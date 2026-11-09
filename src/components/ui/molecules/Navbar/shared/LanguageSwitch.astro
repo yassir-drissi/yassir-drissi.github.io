@@ -9,7 +9,8 @@ interface Props {
 
 const { locale = 'fr' } = Astro.props as Props;
 const copy = getNovaCopy(locale).navigation;
-const pathname = Astro.url.pathname;
+// Sur la page 404 (qui n'existe qu'à la racine), le sélecteur renvoie vers l'accueil de chaque langue.
+const pathname = /^\/404(\.html|\/)?$/.test(Astro.url.pathname) ? '/' : Astro.url.pathname;
 const options: Array<{ code: NovaLocale; label: string; lang: string }> = [
   { code: 'fr', label: 'FR', lang: 'fr' },
   { code: 'en', label: 'EN', lang: 'en' },

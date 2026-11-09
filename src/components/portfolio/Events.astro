@@ -165,6 +165,9 @@ const visible = await Promise.all(
     gap: 1rem;
     margin: 2rem 0 0;
     padding: 0 0 1rem;
+    /* relative : les textes .sr-only (position absolute) des cartes restent dans le carrousel
+       au lieu d'élargir toute la page (défilement horizontal parasite sur mobile). */
+    position: relative;
     overflow-x: auto;
     list-style: none;
     scroll-snap-type: x mandatory;

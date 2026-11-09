@@ -32,7 +32,7 @@ export const profile = {
     spotify: 'https://open.spotify.com/episode/2vKsr4sR0FMeeSof39Xh5j',
   },
 
-  /** Photo : déposer le fichier dans public/images/yassir.webp (format portrait conseillé, 800x1000). */
+  /** Photo : déposer le fichier dans public/images/yassir.webp (carré 800x800, recadré depuis photo_profil_linkedin.jpg). */
   photo: '/images/yassir.webp',
   photoAlt: {
     fr: 'Portrait de Yassir Drissi',

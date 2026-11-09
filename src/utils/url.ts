@@ -36,7 +36,10 @@ export function formatInternalLink(href: string | null | undefined): string {
     formattedBase = '/' + formattedBase;
   }
 
-  if (!formattedBase.endsWith('/')) {
+  // Un fichier (ex. /cv/CV.pdf) n'est pas une page : pas de slash final, sinon le lien est cassé.
+  const isFile = /\.[a-z0-9]{2,5}$/i.test(formattedBase);
+
+  if (!isFile && !formattedBase.endsWith('/')) {
     formattedBase = formattedBase + '/';
   }
 
