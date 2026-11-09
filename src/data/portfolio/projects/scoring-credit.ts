@@ -5,7 +5,7 @@ export const project: Project = {
   order: 3,
   featured: true,
   category: 'data-science',
-  year: 'TODO',
+  year: '2026',
   title: { fr: 'Scoring de crédit', en: 'Credit scoring' },
   context: {
     fr: "Mission freelance · avec deux étudiants de l'INSEA",

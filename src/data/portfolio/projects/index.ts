@@ -15,7 +15,8 @@ import { alzheimer, crimewatch, raceflow, meteo, monAnnonce } from './a-complete
 
 export * from './types';
 
-export const projects: Project[] = [
+/** Tous les projets, brouillons compris. */
+export const allProjects: Project[] = [
   cimentsEye,
   ePress,
   scoringCredit,
@@ -32,6 +33,9 @@ export const projects: Project[] = [
   parking,
   monAnnonce,
 ].sort((a, b) => a.order - b.order);
+
+/** Projets publiés : les brouillons (`draft: true`) n'apparaissent nulle part sur le site. */
+export const projects: Project[] = allProjects.filter((p) => !p.draft);
 
 export const featuredProjects = projects.filter((p) => p.featured);
 

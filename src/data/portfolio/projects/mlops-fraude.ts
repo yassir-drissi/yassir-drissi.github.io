@@ -8,7 +8,11 @@ export const project: Project = {
   category: 'data-science',
   year: '2026',
   title: { fr: 'MLOps : détection de fraude', en: 'MLOps: fraud detection' },
-  context: { fr: 'TODO : module EMSI ou projet personnel', en: 'TODO: EMSI course or personal project' },
+  // Source : Compte_RenduTP05fraud_detection_automl_serving.pdf (module, filière 5IASD, année 2026-2027).
+  context: {
+    fr: 'Module « Déploiement d’applications intelligentes » · EMSI Rabat (5e année)',
+    en: '“Deploying intelligent applications” course · EMSI Rabat (5th year)',
+  },
   problem: {
     fr: "Amener un modèle de détection de fraude jusqu'en production et choisir, sur des critères mesurés, entre un modèle AutoML et un modèle construit à la main.",
     en: 'Take a fraud-detection model all the way to production and choose, on measured criteria, between an AutoML model and a hand-built one.',

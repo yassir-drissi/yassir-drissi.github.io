@@ -37,6 +37,8 @@ export type Project = {
   slug: string;
   /** Ordre d'affichage dans la grille (plus petit = en premier). */
   order: number;
+  /** Brouillon : projet masqué du site (ni carte, ni page détail) tant que le problème ou les résultats manquent. */
+  draft?: boolean;
   /** Projet phare : affiché en grand format en haut de page. */
   featured?: boolean;
   category: ProjectCategory;

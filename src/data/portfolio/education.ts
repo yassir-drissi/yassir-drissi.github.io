@@ -1,5 +1,5 @@
 // Formation et certifications (section Parcours).
-import type { L } from './types';
+import { isTodo, type L } from './types';
 
 export type Education = {
   degree: L;
@@ -44,7 +44,7 @@ export type Certification = {
 };
 
 /** Certifications : le bandeau des chiffres clés compte les obtenues et les en cours. */
-export const certifications: Certification[] = [
+const allCertifications: Certification[] = [
   {
     name: 'OCI AI Foundations Associate',
     issuer: 'Oracle',
@@ -56,8 +56,12 @@ export const certifications: Certification[] = [
   { name: 'Natural Language Processing Specialization', issuer: 'DeepLearning.AI', year: '2026', obtained: true },
   { name: 'Data Engineering', issuer: 'IBM', year: '2025', obtained: true },
   { name: 'Becoming a Machine Learning Engineer', issuer: 'AWS', obtained: false },
+  // Masquée tant que l'intitulé exact n'est pas renseigné (voir le filtre ci-dessous).
   { name: 'TODO : intitulé exact de la certification', issuer: 'Databricks', obtained: false },
 ];
+
+/** Certifications affichées : celles dont l'intitulé est encore un TODO restent masquées. */
+export const certifications = allCertifications.filter((c) => !isTodo(c.name));
 
 /** Formations complémentaires (cours en ligne), hors décompte des certifications. */
 export const complementaryTraining: Array<{ name: string; issuer: string; year: string; post?: string }> = [

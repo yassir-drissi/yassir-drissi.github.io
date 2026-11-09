@@ -53,8 +53,15 @@ export const project: Project = {
       en: 'In Morocco, many everyday tasks (renewing a document, finding a route, tracking spending, comparing prices) require going through several sources. Hayati brings them together in one app, with an assistant that speaks Darija.',
     },
     data: {
-      fr: ['TODO : sources de données utilisées (prix, transports…)'],
-      en: ['TODO: data sources used (prices, transport…)'],
+      // Source : hayati-backend/database/seeders/DatabaseSeeder.php (aucune API de données externe dans le dépôt).
+      fr: [
+        'Données de démonstration chargées par un seeder Laravel : prestataires de services, trajets et options de transport, magasins, produits, prix et promotions',
+        'Dépenses, budget et documents saisis dans l’application par l’utilisateur',
+      ],
+      en: [
+        'Demo data loaded by a Laravel seeder: service providers, transport routes and options, stores, products, prices and promotions',
+        'Spending, budget and documents entered in the app by the user',
+      ],
     },
     approach: {
       fr: [
