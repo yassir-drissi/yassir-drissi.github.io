@@ -1,0 +1,102 @@
+---
+// Domaines d'expertise (structure et style du ServicesHomeBlock Nova).
+import Section from '@components/ui/layout/Section.astro';
+import Container from '@components/ui/layout/Container.astro';
+import Heading from '@components/ui/atoms/Heading.astro';
+import Text from '@components/ui/atoms/Text.astro';
+import Icon from '@components/ui/atoms/Icon.astro';
+import { expertise } from '@data/portfolio/highlights';
+import { getNovaCopy, type NovaLocale } from '@utils/nova-i18n';
+
+interface Props {
+  locale: NovaLocale;
+}
+
+const { locale } = Astro.props;
+const ui = getNovaCopy(locale).expertise;
+---
+
+<Section id="expertise" tone="page" class="py-[clamp(4rem,7vw,6.5rem)]">
+  <Container class="w-full max-w-none px-[clamp(1.5rem,5vw,5rem)]">
+    <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between" data-motion-sequence="viewport" data-motion-profile="soft">
+      <Heading tag="h2" variant="section-title">{ui.title}</Heading>
+      <Text variant="lead" class="max-w-md">{ui.description}</Text>
+    </div>
+    <div class="pf-expertise-grid" data-motion-sequence="viewport" data-motion-profile="soft">
+      {expertise.map((area, index) => (
+        <article class="pf-expertise-card ui-card-interactive group">
+          <div class="flex items-center justify-between">
+            <div class="pf-expertise-icon" aria-hidden="true"><Icon name={area.icon} /></div>
+            <span class="text-sm font-medium tracking-[0.04em] ui-text-on-light-subtle">{String(index + 1).padStart(2, '0')}.</span>
+          </div>
+          <h3 class="m-0 font-heading text-lg font-bold leading-snug tracking-[-0.015em]">{area.title[locale]}</h3>
+          <p class="m-0 text-[0.92rem] leading-relaxed ui-text-on-light-subtle">{area.description[locale]}</p>
+          <ul class="mt-auto flex list-none flex-wrap gap-1.5 p-0 pt-2" role="list">
+            {area.tools.map((tool) => <li class="pf-chip">{tool}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .pf-expertise-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .pf-expertise-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--ui-radius-lg);
+    padding: clamp(1.25rem, 1.8vw, 1.6rem);
+    background: var(--color-surface);
+    box-shadow: var(--ui-elevation-soft);
+    transition: border-color 300ms ease, background-color 300ms ease;
+  }
+
+  .pf-expertise-card:hover {
+    border-color: var(--color-brand-accent);
+  }
+
+  .pf-expertise-icon {
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    place-items: center;
+    border: 1px solid color-mix(in oklab, var(--color-brand-accent) 30%, transparent);
+    border-radius: 9999px;
+    color: var(--color-brand-accent);
+    font-size: 1.35rem;
+    transition: background-color 300ms ease, color 300ms ease;
+  }
+
+  .pf-expertise-card:hover .pf-expertise-icon {
+    background: var(--color-brand-accent);
+    color: var(--pf-on-accent);
+  }
+
+  @media (min-width: 48rem) {
+    .pf-expertise-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .pf-expertise-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pf-expertise-card,
+    .pf-expertise-icon {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+// Bouton clair / sombre. L'état est porté par html[data-mode] et mémorisé
+// dans localStorage (script d'initialisation dans Layout.astro).
+import { getNovaCopy, type NovaLocale } from '@utils/nova-i18n';
+
+interface Props {
+  locale?: NovaLocale;
+}
+
+const { locale = 'fr' } = Astro.props as Props;
+const label = getNovaCopy(locale).navigation.themeToggle;
+---
+
+<button type="button" class="pf-theme-toggle" data-theme-toggle aria-label={label} title={label}>
+  <i class="ph ph-moon pf-theme-toggle__moon" aria-hidden="true"></i>
+  <i class="ph ph-sun pf-theme-toggle__sun" aria-hidden="true"></i>
+</button>
+
+<style>
+  .pf-theme-toggle {
+    display: inline-grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: none;
+    place-items: center;
+    border: 1px solid var(--color-outline-variant);
+    border-radius: 9999px;
+    background: transparent;
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: border-color 180ms ease, color 180ms ease;
+  }
+
+  .pf-theme-toggle:hover {
+    border-color: var(--color-brand-accent);
+    color: var(--color-brand-accent);
+  }
+
+  .pf-theme-toggle__sun {
+    display: none;
+  }
+
+  :global(html[data-mode='dark']) .pf-theme-toggle__sun {
+    display: inline;
+  }
+
+  :global(html[data-mode='dark']) .pf-theme-toggle__moon {
+    display: none;
+  }
+</style>

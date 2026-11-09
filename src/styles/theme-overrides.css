@@ -20,3 +20,108 @@
 [data-theme="nova"] .ui-type-cta-label {
   font-family: var(--font-heading) !important;
 }
+
+/* ------------------------------------------------------------------
+ * Portfolio Yassir Drissi : palette tech/data + mode sombre.
+ * Le mode est porte par html[data-mode] (script inline dans Layout.astro).
+ * ------------------------------------------------------------------ */
+:root {
+  --ui-text-on-light: #0b1220;
+  --ui-text-on-light-subtle: rgba(11, 18, 32, 0.68);
+  --ui-text-on-dark: #f7f9fc;
+  --ui-text-on-dark-subtle: rgba(247, 249, 252, 0.72);
+  /* Blocs toujours sombres (bandeau chiffres, contact) */
+  --pf-ink: #0b1220;
+  --pf-ink-text: #f7f9fc;
+  --pf-ink-muted: rgba(247, 249, 252, 0.72);
+  --pf-ink-border: rgba(247, 249, 252, 0.16);
+  --pf-ink-accent: #60a5fa;
+  --pf-on-accent: #ffffff;
+  --pf-card: var(--color-surface);
+  --pf-chip-bg: color-mix(in oklab, var(--color-brand-accent) 9%, transparent);
+  --pf-chip-text: #1d4ed8;
+  color-scheme: light;
+}
+
+html[data-mode="dark"] {
+  color-scheme: dark;
+  --color-surface: #0f172a;
+  --color-surface-dim: #0b1220;
+  --color-surface-bright: #16213a;
+  --color-surface-container-lowest: #0b1220;
+  --color-surface-container-low: #131d33;
+  --color-surface-container: #182440;
+  --color-surface-container-high: #1f2d4d;
+  --color-surface-container-highest: #2a3a5e;
+  --color-on-surface: #e6ecf5;
+  --color-on-surface-variant: #a5b4cb;
+  --color-outline: #334566;
+  --color-outline-variant: #22314f;
+  --color-background: #070c18;
+  --color-on-background: #e6ecf5;
+  --color-brand-primary: #2563eb;
+  --color-brand-accent: #60a5fa;
+  --color-brand-dark: #e6ecf5;
+  --color-brand-light: #070c18;
+  --color-brand-cream: #0f172a;
+  --ui-text-on-light: #e6ecf5;
+  --ui-text-on-light-subtle: rgba(230, 236, 245, 0.72);
+  --ui-elevation-soft: 0 14px 40px -24px rgb(0 0 0 / 0.6);
+  --ui-elevation-strong: 0 28px 80px -32px rgb(0 0 0 / 0.7);
+  --pf-ink: #0f1a33;
+  --pf-ink-border: rgba(230, 236, 245, 0.14);
+  --pf-on-accent: #0b1220;
+  --pf-chip-bg: rgba(96, 165, 250, 0.12);
+  --pf-chip-text: #93c5fd;
+}
+
+/* Le bouton accent Nova met un texte sombre sur l'accent : illisible sur le bleu. */
+[data-theme="nova"] .ui-button-accent {
+  color: var(--pf-on-accent);
+}
+
+[data-theme="nova"] .ui-button-primary {
+  color: #ffffff;
+}
+
+html[data-mode="dark"] header[data-site-header-static] .ui-nav-cta,
+html[data-mode="dark"] header[data-site-header-fixed] .ui-nav-cta {
+  background: var(--color-brand-primary) !important;
+  color: #ffffff !important;
+}
+
+/* Focus clavier visible partout */
+:where(a, button, summary, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-brand-accent);
+  outline-offset: 3px;
+}
+
+/* Puce / badge technique reutilisable */
+.pf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  padding: 0.3rem 0.7rem;
+  background: var(--pf-chip-bg);
+  color: var(--pf-chip-text);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.pf-todo {
+  display: inline-block;
+  border: 1px dashed #d97706;
+  border-radius: 0.375rem;
+  padding: 0.05rem 0.4rem;
+  background: rgba(217, 119, 6, 0.08);
+  color: #b45309;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+html[data-mode="dark"] .pf-todo {
+  color: #fbbf24;
+}

@@ -1,9 +1,8 @@
 ---
-import Logo from "@components/ui/atoms/Logo.astro";
 import MenuToggle from "@components/ui/molecules/Navbar/shared/MenuToggle.astro";
 import LanguageSwitch from "@components/ui/molecules/Navbar/shared/LanguageSwitch.astro";
+import ThemeToggle from "@components/ui/molecules/Navbar/shared/ThemeToggle.astro";
 import type { NavTheme } from "@components/ui/molecules/Navbar/shared/nav-theme-classes";
-import { formatInternalLink } from "@utils/url";
 import { getNovaCopy, getNovaNavigationPath, type NovaLocale } from "@utils/nova-i18n";
 
 export interface Props {
@@ -11,7 +10,7 @@ export interface Props {
 	locale?: NovaLocale;
 }
 
-const { theme = "light", locale = "pl" } = Astro.props;
+const { theme = "light", locale = "fr" } = Astro.props;
 const headerData = getNovaCopy(locale).navigation;
 
 // Why: floating navbar has two visual states. It's at the top of the page
@@ -54,7 +53,7 @@ const fixedShellClass = isDark
 	<div class="ui-container">
 		<div class="flex items-center justify-between gap-2 py-3 sm:gap-4 sm:py-4 lg:gap-6 lg:py-5" data-nav-inner>
 			<a href={getNovaNavigationPath("/", locale)} class="nova-site-logo relative z-[1010] flex min-w-0 shrink-0 items-center">
-				<Logo variant={isDark ? "light" : "dark"} density="compact" />
+				<span class="pf-wordmark">Yassir Drissi<span class="pf-wordmark__dot" aria-hidden="true">.</span></span>
 			</a>
 
 			<nav class="hidden min-w-0 flex-1 items-center justify-center gap-5 lg:flex xl:gap-8">
@@ -67,10 +66,11 @@ const fixedShellClass = isDark
 
 			<div class="relative z-[1010] flex shrink-0 items-center gap-2 sm:gap-3">
 				<LanguageSwitch locale={locale} />
+				<ThemeToggle locale={locale} />
 				<!-- Dlaczego: globalny wzorzec przycisku (ui-button ui-button-primary ui-nav-cta)
          instead of raw classes. Gives consistent hover (text swap + color slide) and dimensions
 				     z core.css. Wzorzec z NavbarMainCentered (layout Centered). -->
-				<a href={formatInternalLink(headerData.cta.href)} class="ui-button ui-button-primary ui-nav-cta hidden sm:flex">
+				<a href={getNovaNavigationPath(headerData.cta.href, locale)} class="ui-button ui-button-primary ui-nav-cta hidden sm:flex">
 					<span class="ui-button-text-wrap">
 						<span class="ui-button-text-default">{headerData.cta.label}</span>
 						<span class="ui-button-text-hover">{headerData.cta.hoverLabel}</span>
@@ -95,7 +95,7 @@ const fixedShellClass = isDark
 	<div class="ui-container">
 		<div class="flex items-center justify-between gap-2 py-2.5 sm:gap-4 sm:py-3 lg:gap-6 lg:py-3.5" data-nav-inner>
 			<a href={getNovaNavigationPath("/", locale)} class="nova-site-logo relative z-[1010] flex min-w-0 shrink-0 items-center">
-				<Logo variant={isDark ? "light" : "dark"} density="compact" />
+				<span class="pf-wordmark">Yassir Drissi<span class="pf-wordmark__dot" aria-hidden="true">.</span></span>
 			</a>
 
 			<nav class="hidden min-w-0 flex-1 items-center justify-center gap-5 lg:flex xl:gap-8">
@@ -108,7 +108,8 @@ const fixedShellClass = isDark
 
 			<div class="relative z-[1010] flex shrink-0 items-center gap-2 sm:gap-3">
 				<LanguageSwitch locale={locale} />
-				<a href={formatInternalLink(headerData.cta.href)} class="ui-button ui-button-primary ui-nav-cta hidden sm:flex">
+				<ThemeToggle locale={locale} />
+				<a href={getNovaNavigationPath(headerData.cta.href, locale)} class="ui-button ui-button-primary ui-nav-cta hidden sm:flex">
 					<span class="ui-button-text-wrap">
 						<span class="ui-button-text-default">{headerData.cta.label}</span>
 						<span class="ui-button-text-hover">{headerData.cta.hoverLabel}</span>
@@ -154,7 +155,19 @@ const fixedShellClass = isDark
 	}
 
 	:global(html[data-theme="nova"] header[data-site-header-fixed]) {
-		top: 2.75rem;
+		top: 0;
+	}
+
+	.pf-wordmark {
+		font-family: var(--font-heading);
+		font-size: 1.2rem;
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		white-space: nowrap;
+	}
+
+	.pf-wordmark__dot {
+		color: var(--color-brand-accent);
 	}
 
 	:global(html[data-theme="nova"] header[data-site-header-static] [data-nav-inner]),

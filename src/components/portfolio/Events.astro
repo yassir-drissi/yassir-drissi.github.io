@@ -1,0 +1,321 @@
+---
+// Événements & engagement : carrousel de cartes (défilement horizontal + boutons).
+// Photos : src/assets/images/events/, converties en WebP par astro:assets ; la
+// couverture et les vignettes ouvrent la lightbox globale (public/js/lightbox.js).
+import Section from '@components/ui/layout/Section.astro';
+import Container from '@components/ui/layout/Container.astro';
+import Heading from '@components/ui/atoms/Heading.astro';
+import Text from '@components/ui/atoms/Text.astro';
+import T from './T.astro';
+import { events, recommendations, type EventImage } from '@data/portfolio/events';
+import { getNovaCopy, type NovaLocale } from '@utils/nova-i18n';
+import { resolveEventImage } from '@utils/portfolio-images';
+
+interface Props {
+  locale: NovaLocale;
+}
+
+const { locale } = Astro.props;
+const ui = getNovaCopy(locale);
+
+async function resolveImage(image: EventImage) {
+  const resolved = await resolveEventImage({ file: image.file });
+  return resolved ? { thumb: resolved.src, full: resolved.full, width: resolved.width, height: resolved.height, alt: image.alt[locale], position: image.position, contain: image.contain } : null;
+}
+
+const visible = await Promise.all(
+  events
+    .filter((e) => !e.draft)
+    .sort((a, b) => (b.sortDate ?? '').localeCompare(a.sortDate ?? ''))
+    .map(async (event) => ({
+      ...event,
+      photos: (await Promise.all((event.images ?? []).map(resolveImage))).filter((p) => p !== null),
+    })),
+);
+---
+
+<Section id="evenements" tone="page" class="overflow-hidden py-[clamp(4rem,7vw,6.5rem)]">
+  <Container class="w-full max-w-none px-[clamp(1.5rem,5vw,5rem)]">
+    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between" data-motion-sequence="viewport" data-motion-profile="soft">
+      <div>
+        <Heading tag="h2" variant="section-title">{ui.events.title}</Heading>
+        <Text variant="lead" class="mt-3 max-w-xl">{ui.events.description}</Text>
+      </div>
+      {visible.length > 1 && (
+        <div class="flex gap-2" data-pf-carousel-controls>
+          <button type="button" class="pf-carousel-btn" data-dir="-1" aria-label={ui.events.previous}><i class="ph ph-arrow-left" aria-hidden="true"></i></button>
+          <button type="button" class="pf-carousel-btn" data-dir="1" aria-label={ui.events.next}><i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+        </div>
+      )}
+    </div>
+
+    <ul class="pf-carousel" role="list" data-pf-carousel tabindex="0" aria-label={ui.events.title}>
+      {visible.map((event) => {
+        const [cover, ...rest] = event.photos;
+        return (
+          <li class:list={['pf-event', event.badge && 'is-highlight']}>
+            {cover ? (
+              <div class="pf-event__media" data-lightbox-group>
+                <button type="button" class="pf-event__cover" data-lightbox data-href={cover.full} data-title={cover.alt} aria-label={`${ui.events.enlarge} : ${cover.alt}`}>
+                  <img src={cover.thumb} alt={cover.alt} width={cover.width} height={cover.height} loading="lazy" decoding="async" class:list={[cover.contain && 'is-contain']} style={cover.position ? `object-position: ${cover.position}` : undefined} />
+                </button>
+                {rest.length > 0 && (
+                  <div class="pf-event__thumbs" aria-label={ui.events.gallery}>
+                    {rest.map((photo) => (
+                      <button type="button" class="pf-event__thumb" data-lightbox data-href={photo.full} data-title={photo.alt} aria-label={`${ui.events.enlarge} : ${photo.alt}`}>
+                        <img src={photo.thumb} alt="" width="96" height="64" loading="lazy" decoding="async" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {event.credit && <span class="pf-event__credit">{event.credit[locale]}</span>}
+              </div>
+            ) : (
+              <div class="pf-event__media pf-event__placeholder" aria-hidden="true">
+                <i class={`ph ph-${event.icon}`}></i>
+              </div>
+            )}
+            <div class="flex flex-1 flex-col gap-3 p-5">
+              <div class="flex flex-wrap items-center gap-2 text-sm">
+                {event.badge && (
+                  <span class="pf-event__badge"><i class={`ph ph-${event.badge.icon}`} aria-hidden="true"></i>{event.badge.label[locale]}</span>
+                )}
+                <span class="ui-text-on-light-subtle"><T text={event.date[locale]} /></span>
+              </div>
+              <h3 class="m-0 font-heading text-lg font-bold leading-snug tracking-[-0.015em]">{event.title[locale]}</h3>
+              <dl class="m-0 grid gap-1 text-sm ui-text-on-light-subtle">
+                <div class="flex items-start gap-1.5">
+                  <dt><i class="ph ph-user-circle" aria-hidden="true"></i><span class="sr-only">{ui.events.role}</span></dt>
+                  <dd class="m-0 font-medium text-[var(--color-on-surface)]">{event.role[locale]}</dd>
+                </div>
+                {event.place && (
+                  <div class="flex items-start gap-1.5">
+                    <dt><i class="ph ph-map-pin" aria-hidden="true"></i><span class="sr-only">{ui.events.place}</span></dt>
+                    <dd class="m-0"><T text={event.place[locale]} /></dd>
+                  </div>
+                )}
+              </dl>
+              <p class="m-0 text-[0.93rem] leading-relaxed"><T text={event.takeaway[locale]} /></p>
+              {event.embed && (
+                <iframe
+                  class="pf-event__embed"
+                  src={event.embed.src}
+                  title={event.embed.title[locale]}
+                  height={event.embed.height}
+                  loading="lazy"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                ></iframe>
+              )}
+              {event.links && event.links.length > 0 && (
+                <div class="mt-auto flex flex-wrap gap-x-5 gap-y-1">
+                  {event.links.map((link) => (
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-brand-accent hover:underline">
+                      <i class={`ph ph-${link.icon}`} aria-hidden="true"></i>{link.label[locale]}<span class="sr-only"> : {event.title[locale]}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+
+    {recommendations.length > 0 && (
+      <div class="mt-14">
+        <h3 class="m-0 font-heading text-xl font-bold">{ui.recommendations.title}</h3>
+        <div class="mt-5 grid gap-4 md:grid-cols-2">
+          {recommendations.map((rec) => (
+            <figure class="m-0 rounded-[var(--ui-radius-lg)] border border-[var(--color-outline-variant)] bg-[var(--color-surface)] p-6">
+              <blockquote class="m-0 leading-relaxed">{rec.text[locale]}</blockquote>
+              <figcaption class="mt-4 text-sm">
+                <strong>{rec.author}</strong>
+                <span class="ui-text-on-light-subtle"> · {rec.role[locale]}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    )}
+  </Container>
+</Section>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    var track = document.querySelector('[data-pf-carousel]');
+    var controls = document.querySelector('[data-pf-carousel-controls]');
+    if (!track || !controls || controls.dataset.ready) return;
+    controls.dataset.ready = 'true';
+    controls.addEventListener('click', function (event) {
+      var button = event.target.closest('[data-dir]');
+      if (!button) return;
+      var card = track.querySelector('li');
+      var step = card ? card.getBoundingClientRect().width + 16 : track.clientWidth * 0.8;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      track.scrollBy({ left: step * Number(button.dataset.dir), behavior: reduce ? 'auto' : 'smooth' });
+    });
+  })();
+</script>
+
+<style>
+  .pf-carousel {
+    display: grid;
+    grid-auto-columns: min(85%, 22rem);
+    grid-auto-flow: column;
+    gap: 1rem;
+    margin: 2rem 0 0;
+    padding: 0 0 1rem;
+    overflow-x: auto;
+    list-style: none;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  .pf-event {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--ui-radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--ui-elevation-soft);
+    scroll-snap-align: start;
+  }
+
+  .pf-event.is-highlight {
+    border-color: color-mix(in oklab, var(--color-brand-accent) 55%, var(--color-outline-variant));
+    box-shadow: inset 0 3px 0 var(--color-brand-accent), var(--ui-elevation-soft);
+  }
+
+  .pf-event__media {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-surface-container-low);
+  }
+
+  .pf-event__cover {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+
+  .pf-event__cover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 400ms ease;
+  }
+
+  .pf-event__cover img.is-contain {
+    object-fit: contain;
+    background: #0b1220;
+  }
+
+  .pf-event__cover:hover img {
+    transform: scale(1.03);
+  }
+
+  .pf-event__thumbs {
+    display: flex;
+    gap: 0.4rem;
+    padding: 0.6rem 1.25rem 0;
+    background: var(--color-surface);
+  }
+
+  .pf-event__thumb {
+    width: 3rem;
+    height: 2.1rem;
+    overflow: hidden;
+    padding: 0;
+    border: 1px solid var(--color-outline-variant);
+    border-radius: 0.4rem;
+    background: var(--color-surface-container-low);
+    cursor: zoom-in;
+    transition: border-color 200ms ease;
+  }
+
+  .pf-event__thumb:hover,
+  .pf-event__thumb:focus-visible {
+    border-color: var(--color-brand-accent);
+  }
+
+  .pf-event__thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pf-event__credit {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    background: rgb(0 0 0 / 0.55);
+    color: #fff;
+    font-size: 0.72rem;
+  }
+
+  .pf-event__placeholder {
+    aspect-ratio: 16 / 9;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(circle at 80% 20%, color-mix(in oklab, var(--color-brand-accent) 22%, transparent), transparent 60%),
+      var(--color-surface-container-low);
+    color: var(--color-brand-accent);
+    font-size: 2.5rem;
+  }
+
+  .pf-event__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 9999px;
+    background: var(--color-brand-accent);
+    color: var(--pf-on-accent, #fff);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .pf-event__embed {
+    width: 100%;
+    border: 0;
+    border-radius: 12px;
+  }
+
+  .pf-carousel-btn {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: 1px solid var(--color-outline-variant);
+    border-radius: 9999px;
+    background: var(--color-surface);
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .pf-carousel-btn:hover {
+    border-color: var(--color-brand-accent);
+    color: var(--color-brand-accent);
+  }
+
+  @media (min-width: 64rem) {
+    .pf-carousel {
+      grid-auto-columns: calc((100% - 2rem) / 3);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pf-event__cover img { transition: none; }
+  }
+</style>

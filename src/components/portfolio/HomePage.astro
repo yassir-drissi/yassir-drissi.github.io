@@ -1,0 +1,33 @@
+---
+// Page d'accueil complète, partagée par / (FR) et /en/ (EN).
+import Layout from '@layouts/Layout.astro';
+import Hero from './Hero.astro';
+import FeaturedProjects from './FeaturedProjects.astro';
+import Expertise from './Expertise.astro';
+import About from './About.astro';
+import Projects from './Projects.astro';
+import Timeline from './Timeline.astro';
+import Events from './Events.astro';
+import Faq3Block from '@components/registry/faq/Faq3Block.astro';
+import { faq } from '@data/portfolio/highlights';
+import { getNovaCopy, type NovaLocale } from '@utils/nova-i18n';
+
+interface Props {
+  locale: NovaLocale;
+}
+
+const { locale } = Astro.props;
+const ui = getNovaCopy(locale);
+const faqItems = faq.map((item) => ({ q: item.q[locale], a: item.a[locale] }));
+---
+
+<Layout locale={locale} fullBleedTop ogType="profile">
+  <Hero locale={locale} />
+  <FeaturedProjects locale={locale} />
+  <Expertise locale={locale} />
+  <About locale={locale} />
+  <Projects locale={locale} />
+  <Timeline locale={locale} />
+  <Events locale={locale} />
+  <Faq3Block sectionId="faq" title={ui.faq.title} description={ui.faq.description} items={faqItems} class="pb-24" />
+</Layout>

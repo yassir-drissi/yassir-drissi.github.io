@@ -1,0 +1,195 @@
+---
+// Hero (structure du NovaHeroResponsiveBlock) : nom, titre, accroche, 2 boutons,
+// bandeau des organisations et chiffres clés.
+import Section from '@components/ui/layout/Section.astro';
+import Container from '@components/ui/layout/Container.astro';
+import Heading from '@components/ui/atoms/Heading.astro';
+import Text from '@components/ui/atoms/Text.astro';
+import Button from '@components/ui/atoms/Button.astro';
+import { profile } from '@data/portfolio/profile';
+import { organizations, stats } from '@data/portfolio/highlights';
+import { getNovaCopy, getNovaLocalePath, type NovaLocale } from '@utils/nova-i18n';
+
+interface Props {
+  locale: NovaLocale;
+}
+
+const { locale } = Astro.props;
+const ui = getNovaCopy(locale);
+const intro = {
+  fr: "Je conçois des systèmes de vision par ordinateur, des applications LLM et des pipelines de données, du prototype jusqu'au déploiement. Je recherche un stage de fin d'études de 6 mois à partir de février 2027.",
+  en: 'I build computer vision systems, LLM applications and data pipelines, from prototype to deployment. I am looking for a 6-month final-year internship starting February 2027.',
+}[locale];
+---
+
+<Section id="accueil" tone="page" class="hero-section pf-hero overflow-hidden pt-[calc(var(--site-header-height,5.75rem)+var(--hero-below-header-gap,0.75rem))] pb-0">
+  <Container class="w-full max-w-none px-0">
+    <div class="relative overflow-hidden rounded-t-xl bg-surface">
+      <div class="pf-hero__grid" aria-hidden="true"></div>
+      <div class="relative grid min-w-0 grid-cols-1 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+        <div class="flex min-w-0 flex-col justify-center gap-6 px-[clamp(1.25rem,5vw,5rem)] pb-10 pt-[clamp(2.5rem,7vw,5rem)] md:pb-14" data-motion-sequence="fade">
+          <p class="pf-availability">
+            <span class="pf-availability__dot" aria-hidden="true"></span>
+            {profile.availability[locale]}
+          </p>
+          <div class="flex flex-col gap-3">
+            <Heading tag="h1" variant="hero" class="font-bold leading-[0.95] tracking-[-0.06em] text-[clamp(2.75rem,9vw,5rem)]">
+              {profile.name}
+            </Heading>
+            <p class="m-0 font-heading text-[clamp(1.15rem,2.4vw,1.6rem)] font-semibold leading-tight tracking-[-0.02em]">
+              {profile.title[locale]}
+            </p>
+            <p class="m-0 font-mono text-[clamp(0.78rem,1.4vw,0.9rem)] font-medium tracking-[0.04em] text-brand-accent">{profile.roles}</p>
+          </div>
+          <Text variant="lead" class="max-w-[38rem] text-[clamp(1rem,1.5vw,1.2rem)]">{intro}</Text>
+          <div class="flex flex-wrap items-center gap-3">
+            <Button href={`${getNovaLocalePath(locale)}#projets`} variant="primary" size="lg" class="min-h-11 w-full font-semibold sm:w-auto">{ui.hero.seeProjects}</Button>
+            <Button href={profile.cv[locale]} variant="outline" size="lg" class="min-h-11 w-full font-semibold sm:w-auto" download="">
+              <i slot="icon-left" class="ph ph-download-simple text-lg" aria-hidden="true"></i>
+              {ui.hero.downloadCv}
+            </Button>
+          </div>
+          <p class="m-0 flex items-center gap-2 text-sm ui-text-on-light-subtle">
+            <i class="ph ph-map-pin text-base" aria-hidden="true"></i>
+            {profile.location[locale]}
+          </p>
+        </div>
+
+        <div class="relative flex min-w-0 items-end justify-center px-[clamp(1.25rem,4vw,3rem)] pb-8 md:pt-10" data-motion="fade" style="--motion-delay: 120ms">
+          <figure class="pf-portrait">
+            <img
+              src={profile.photo}
+              alt={profile.photoAlt[locale]}
+              width="800"
+              height="1000"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </figure>
+        </div>
+      </div>
+
+      <div class="relative border-t border-[var(--color-outline-variant)] px-[clamp(1.25rem,5vw,5rem)] py-5" data-motion="fade" style="--motion-delay: 360ms">
+        <p class="m-0 mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.16em] ui-text-on-light-subtle">{ui.hero.organizationsLabel}</p>
+        <ul class="m-0 flex list-none flex-wrap gap-x-7 gap-y-2 p-0" role="list">
+          {organizations.map((org) => (
+            <li class="font-heading text-[0.95rem] font-semibold tracking-[-0.01em] opacity-75">{org}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="pf-stats grid grid-cols-2 px-[clamp(1rem,3vw,2.5rem)] py-[clamp(1.75rem,3vw,2.5rem)] md:grid-cols-4" data-motion-sequence="viewport" data-motion-profile="soft">
+        {stats.map((stat) => (
+          <div class="pf-stat relative flex flex-col items-center gap-1 px-3 py-3 text-center md:py-0">
+            <strong class="font-heading text-[clamp(2rem,4vw,2.9rem)] font-bold leading-none tracking-[-0.04em] text-[var(--pf-ink-accent)]">{stat.value}</strong>
+            <span class="text-[0.9rem] leading-snug text-[var(--pf-ink-muted)]">{stat.label[locale]}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .pf-hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--color-brand-dark) 6%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--color-brand-dark) 6%, transparent) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 70% 60% at 75% 30%, black, transparent 75%);
+    pointer-events: none;
+  }
+
+  .pf-availability {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    border: 1px solid color-mix(in oklab, #16a34a 35%, transparent);
+    border-radius: 9999px;
+    padding: 0.4rem 0.85rem;
+    background: color-mix(in oklab, #16a34a 9%, transparent);
+    color: #15803d;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  :global(html[data-mode='dark']) .pf-availability {
+    color: #4ade80;
+  }
+
+  .pf-availability__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: currentColor;
+  }
+
+  .pf-portrait {
+    position: relative;
+    width: min(100%, 24rem);
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 2rem 2rem 2rem 6rem;
+    background: linear-gradient(160deg, #1d4ed8, #0b1220);
+    box-shadow: var(--ui-elevation-strong);
+  }
+
+  .pf-portrait::after {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+  }
+
+  .pf-portrait img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pf-stats {
+    background: var(--pf-ink);
+    color: var(--pf-ink-text);
+  }
+
+  @media (max-width: 767px) {
+    .pf-stat:nth-child(even)::before {
+      position: absolute;
+      inset-block: 0.75rem;
+      left: 0;
+      width: 1px;
+      background: var(--pf-ink-border);
+      content: '';
+    }
+
+    .pf-stat:nth-child(-n + 2)::after {
+      position: absolute;
+      right: 0.75rem;
+      bottom: 0;
+      left: 0.75rem;
+      height: 1px;
+      background: var(--pf-ink-border);
+      content: '';
+    }
+  }
+
+  @media (min-width: 768px) {
+    .pf-stat + .pf-stat::before {
+      position: absolute;
+      inset-block: 15%;
+      left: 0;
+      width: 1px;
+      background: var(--pf-ink-border);
+      content: '';
+    }
+  }
+</style>

@@ -1,0 +1,199 @@
+---
+// Carte projet de la grille : vignette, contexte, problème / ce que j'ai fait / résultat, stack et liens.
+import T from './T.astro';
+import { categoryLabels, type Project } from '@data/portfolio/projects';
+import { getNovaCopy, localizePath, type NovaLocale } from '@utils/nova-i18n';
+import { resolveProjectImage } from '@utils/portfolio-images';
+
+interface Props {
+  project: Project;
+  locale: NovaLocale;
+}
+
+const { project, locale } = Astro.props;
+const ui = getNovaCopy(locale).projects;
+const href = localizePath(`/projets/${project.slug}/`, locale);
+const coverInput = project.images?.[0];
+const cover = coverInput ? await resolveProjectImage(coverInput, 960) : null;
+const icons: Record<string, string> = {
+  vision: 'eye',
+  genai: 'chats-circle',
+  'data-science': 'chart-line-up',
+  'data-eng': 'database',
+  iot: 'cpu',
+};
+---
+
+<article class="pf-card ui-card-interactive" data-category={project.category}>
+  <a href={href} class="pf-card__media" tabindex="-1" aria-hidden="true">
+    {cover ? (
+      <img src={cover.src} alt="" width={cover.width} height={cover.height} loading="lazy" decoding="async" style={coverInput?.position ? `object-position: ${coverInput.position}` : undefined} />
+    ) : (
+      <div class="pf-card__placeholder">
+        <i class={`ph ph-${icons[project.category]}`}></i>
+      </div>
+    )}
+  </a>
+  <div class="pf-card__body">
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="pf-chip">{categoryLabels[project.category][locale]}</span>
+      <span class="text-xs ui-text-on-light-subtle"><T text={project.context[locale]} /></span>
+    </div>
+    <h3 class="m-0 font-heading text-xl font-bold tracking-[-0.02em]">
+      <a href={href} class="pf-card__title">{project.title[locale]}</a>
+    </h3>
+    <dl class="m-0 grid gap-3 text-[0.92rem] leading-relaxed">
+      <div>
+        <dt class="pf-card__label">{ui.problem}</dt>
+        <dd class="m-0 ui-text-on-light-subtle"><T text={project.problem[locale]} /></dd>
+      </div>
+      <div>
+        <dt class="pf-card__label">{ui.did}</dt>
+        <dd class="m-0 ui-text-on-light-subtle"><T text={project.did[locale]} /></dd>
+      </div>
+      <div>
+        <dt class="pf-card__label">{ui.result}</dt>
+        <dd class="m-0 font-medium"><T text={project.result[locale]} /></dd>
+      </div>
+    </dl>
+    {project.stack.length > 0 && (
+      <ul class="m-0 flex list-none flex-wrap gap-1.5 p-0" role="list">
+        {project.stack.map((tech) => <li class="pf-tag">{tech}</li>)}
+      </ul>
+    )}
+    <div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-sm font-semibold">
+      <a href={href} class="pf-card__more">{ui.details} <span aria-hidden="true">→</span><span class="sr-only"> : {project.title[locale]}</span></a>
+      {project.links?.code && (
+        <a href={project.links.code} target="_blank" rel="noopener noreferrer" class="pf-card__ext">
+          <i class="ph ph-github-logo" aria-hidden="true"></i>{ui.code}<span class="sr-only"> {project.title[locale]}</span>
+        </a>
+      )}
+      {project.links?.demo && (
+        <a href={project.links.demo} target="_blank" rel="noopener noreferrer" class="pf-card__ext">
+          <i class="ph ph-arrow-square-out" aria-hidden="true"></i>{ui.demo}<span class="sr-only"> {project.title[locale]}</span>
+        </a>
+      )}
+      {project.links?.post && (
+        <a href={project.links.post} target="_blank" rel="noopener noreferrer" class="pf-card__ext">
+          <i class="ph ph-linkedin-logo" aria-hidden="true"></i>{ui.post}<span class="sr-only"> LinkedIn : {project.title[locale]}</span>
+        </a>
+      )}
+      {!project.links?.code && (
+        <span class="inline-flex items-center gap-1.5 font-medium ui-text-on-light-subtle"><i class="ph ph-lock-simple" aria-hidden="true"></i>{ui.privateCode}</span>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .pf-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--ui-radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--ui-elevation-soft);
+  }
+
+  .pf-card[hidden] {
+    display: none;
+  }
+
+  .pf-card__media {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--color-outline-variant);
+    background: var(--color-surface-container-low);
+  }
+
+  .pf-card__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .pf-card:hover .pf-card__media img {
+    transform: scale(1.03);
+  }
+
+  .pf-card__placeholder {
+    display: grid;
+    height: 100%;
+    place-items: center;
+    background:
+      radial-gradient(circle at 80% 20%, color-mix(in oklab, var(--color-brand-accent) 22%, transparent), transparent 55%),
+      linear-gradient(135deg, var(--color-surface-container-low), var(--color-surface-container));
+    color: var(--color-brand-accent);
+    font-size: 2.75rem;
+  }
+
+  .pf-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.25rem;
+  }
+
+  .pf-card__title {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .pf-card__title:hover {
+    color: var(--color-brand-accent);
+  }
+
+  .pf-card__label {
+    margin-bottom: 0.15rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .pf-tag {
+    border: 1px solid var(--color-outline-variant);
+    border-radius: 0.4rem;
+    padding: 0.15rem 0.5rem;
+    color: var(--color-on-surface-variant);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .pf-card__more {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-brand-accent);
+    text-decoration: none;
+  }
+
+  .pf-card__ext {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: 0.35rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .pf-card__ext:hover,
+  .pf-card__more:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pf-card__media img {
+      transition: none;
+    }
+  }
+</style>

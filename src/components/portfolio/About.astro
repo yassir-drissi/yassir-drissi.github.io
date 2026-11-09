@@ -1,0 +1,90 @@
+---
+// À propos (structure du TeamBlock Nova) : photo, parcours, engagement, langues.
+import Section from '@components/ui/layout/Section.astro';
+import Container from '@components/ui/layout/Container.astro';
+import Heading from '@components/ui/atoms/Heading.astro';
+import Text from '@components/ui/atoms/Text.astro';
+import Button from '@components/ui/atoms/Button.astro';
+import { profile } from '@data/portfolio/profile';
+import { getNovaCopy, getNovaLocalePath, type NovaLocale } from '@utils/nova-i18n';
+
+interface Props {
+  locale: NovaLocale;
+}
+
+const { locale } = Astro.props;
+const ui = getNovaCopy(locale).about;
+---
+
+<Section id="a-propos" tone="page" class="py-[clamp(3rem,6vw,5rem)]">
+  <Container class="w-full max-w-none px-[clamp(1.5rem,5vw,5rem)]">
+    <div class="grid grid-cols-1 items-center gap-8 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-14">
+      <figure class="pf-about-photo m-0" data-motion="viewport">
+        <img src={profile.photo} alt={profile.photoAlt[locale]} width="800" height="1000" loading="lazy" decoding="async" />
+      </figure>
+      <div class="flex flex-col gap-5" data-motion-sequence="viewport" data-motion-profile="soft">
+        <Heading tag="h2" variant="section-title">{ui.title}</Heading>
+        {ui.paragraphs.map((paragraph) => <Text variant="lead" class="text-[clamp(1rem,1.3vw,1.125rem)]">{paragraph}</Text>)}
+        <div>
+          <h3 class="m-0 mb-3 text-xs font-bold uppercase tracking-[0.14em] ui-text-on-light-subtle">{ui.checksTitle}</h3>
+          <ul class="m-0 grid list-none gap-3 p-0" role="list">
+            {ui.checks.map((check) => (
+              <li class="flex items-center gap-3">
+                <span class="grid size-8 shrink-0 place-items-center rounded-full bg-brand-accent text-[var(--pf-on-accent)]" aria-hidden="true">
+                  <i class="ph ph-check text-base"></i>
+                </span>
+                <span>
+                  {check.label}
+                  {check.href && (
+                    <>
+                      {' · '}
+                      <a href={check.href} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 font-semibold text-brand-accent hover:underline">
+                        <i class="ph ph-spotify-logo" aria-hidden="true"></i>{check.linkLabel}
+                      </a>
+                    </>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3 class="m-0 mb-3 text-xs font-bold uppercase tracking-[0.14em] ui-text-on-light-subtle">{ui.languagesTitle}</h3>
+          <ul class="m-0 flex list-none flex-wrap gap-2 p-0" role="list">
+            {profile.languages.map((language) => (
+              <li class="rounded-full border border-[var(--color-outline-variant)] px-3 py-1.5 text-sm">
+                <strong class="font-semibold">{language.name[locale]}</strong>
+                <span class="ui-text-on-light-subtle"> · {language.level[locale]}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <Button href={`${getNovaLocalePath(locale)}#contact`} variant="primary" size="md" class="min-h-11 w-full sm:w-fit">{ui.button}</Button>
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .pf-about-photo {
+    width: min(100%, 26rem);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--ui-radius-xl);
+    background: linear-gradient(160deg, #1d4ed8, #0b1220);
+    box-shadow: var(--ui-elevation-strong);
+  }
+
+  .pf-about-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 48rem) {
+    .pf-about-photo {
+      justify-self: center;
+    }
+  }
+</style>
