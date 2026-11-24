@@ -11,6 +11,7 @@ import { project as skywatch } from './skywatch-maroc';
 import { project as ragCv } from './rag-cv';
 import { project as sentiment } from './sentiment-avis';
 import { project as parking } from './parking-iot';
+import { project as prixImmobilier } from './prix-immobilier';
 import { alzheimer, crimewatch, raceflow, meteo, monAnnonce } from './a-completer';
 
 export * from './types';
@@ -23,6 +24,7 @@ export const allProjects: Project[] = [
   risqueLongevite,
   mlopsFraude,
   hayati,
+  prixImmobilier,
   skywatch,
   ragCv,
   meteo,
