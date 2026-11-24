@@ -6,7 +6,7 @@ const fr = {
   page: {
     title: 'Yassir Drissi — AI & Data Engineer',
     description:
-      "Étudiant ingénieur IA & Data Science (EMSI Rabat, double diplôme Université Côte d'Azur). Vision par ordinateur, LLM, data science et data engineering. Recherche un PFE de 6 mois à partir de février 2027.",
+      "Étudiant ingénieur IA & Data Science (EMSI Rabat). Vision par ordinateur, LLM, data science et data engineering. Recherche un PFE de 6 mois à partir de février 2027.",
   },
   navigation: {
     menu: [
@@ -45,12 +45,11 @@ const fr = {
   about: {
     title: 'À propos',
     paragraphs: [
-      "Étudiant ingénieur en informatique, option IA & Data Science, à l'EMSI Rabat, en double diplôme avec l'Université Côte d'Azur. Avant le cycle ingénieur, j'ai suivi la classe préparatoire intégrée de l'EHEIM Oujda.",
+      "Étudiant ingénieur en informatique, option IA & Data Science, à l'EMSI Rabat. Avant le cycle ingénieur, j'ai suivi la classe préparatoire intégrée de l'EHEIM Oujda.",
       "Mes stages m'ont amené à concevoir un système de vidéosurveillance intelligente pour un site cimentier et une plateforme de veille presse fondée sur des LLM exécutés en local. Je m'intéresse aux projets où il faut mesurer ce que fait un modèle et le faire tourner dans des conditions réelles.",
     ],
     checksTitle: 'Engagement',
     checks: [
-      { label: "Double diplôme EMSI – Université Côte d'Azur" },
       { label: 'Ambassadeur du Career Center EMSI Rabat' },
       { label: 'Animateur du podcast EngiTalks (épisode 1 : cybersécurité)', href: ENGITALKS_EPISODE_URL, linkLabel: 'Écouter sur Spotify' },
     ] as Array<{ label: string; href?: string; linkLabel?: string }>,
@@ -163,7 +162,7 @@ const en: Ui = {
   page: {
     title: 'Yassir Drissi — AI & Data Engineer',
     description:
-      "AI & Data Science engineering student (EMSI Rabat, double degree with Université Côte d'Azur). Computer vision, LLMs, data science and data engineering. Looking for a 6-month final-year internship from February 2027.",
+      "AI & Data Science engineering student (EMSI Rabat). Computer vision, LLMs, data science and data engineering. Looking for a 6-month final-year internship from February 2027.",
   },
   navigation: {
     menu: [
@@ -202,12 +201,11 @@ const en: Ui = {
   about: {
     title: 'About me',
     paragraphs: [
-      "Computer engineering student specialising in AI & Data Science at EMSI Rabat, on a double degree with Université Côte d'Azur. Before the engineering cycle, I completed the integrated preparatory classes at EHEIM Oujda.",
+      "Computer engineering student specialising in AI & Data Science at EMSI Rabat. Before the engineering cycle, I completed the integrated preparatory classes at EHEIM Oujda.",
       'My internships led me to build an intelligent video-surveillance system for a cement plant and a media-monitoring platform based on locally hosted LLMs. I am drawn to projects where a model’s behaviour has to be measured and made to run in real conditions.',
     ],
     checksTitle: 'Involvement',
     checks: [
-      { label: "Double degree EMSI – Université Côte d'Azur" },
       { label: 'EMSI Rabat Career Center Ambassador' },
       { label: 'Host of the EngiTalks podcast (episode 1: cybersecurity)', href: ENGITALKS_EPISODE_URL, linkLabel: 'Listen on Spotify' },
     ],

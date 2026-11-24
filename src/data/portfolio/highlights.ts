@@ -11,7 +11,6 @@ export const organizations: string[] = [
   'iCatchAgency',
   'Groupe Al Omrane',
   'EMSI',
-  "Université Côte d'Azur",
 ];
 
 const obtainedCerts = certifications.filter((c) => c.obtained).length;

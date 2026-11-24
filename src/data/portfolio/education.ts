@@ -18,10 +18,6 @@ export const education: Education[] = [
     school: 'EMSI Rabat',
     period: { fr: 'oct. 2024 – juin 2027', en: 'Oct 2024 – Jun 2027' },
     start: '2024-10',
-    details: {
-      fr: "Double diplôme avec l'Université Côte d'Azur (UCA).",
-      en: "Double degree with Université Côte d'Azur (UCA), France.",
-    },
   },
   {
     degree: { fr: 'Classe préparatoire intégrée', en: 'Integrated preparatory classes' },
