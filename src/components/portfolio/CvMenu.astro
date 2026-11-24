@@ -1,0 +1,231 @@
+---
+// Bouton « Télécharger mon CV » : au clic, affiche la liste des versions du CV (une par profil)
+// au lieu de lancer directement un téléchargement. La langue du site choisit le fichier.
+// Le bouton par défaut est celui du hero ; le pied de page fournit le sien via le slot « trigger ».
+import Button from '@components/ui/atoms/Button.astro';
+import { profile, cvFile } from '@data/portfolio/profile';
+import { getNovaCopy, type NovaLocale } from '@utils/nova-i18n';
+
+interface Props {
+  locale: NovaLocale;
+  /** Sens d'ouverture de la liste : vers le bas (hero) ou vers le haut (pied de page). */
+  placement?: 'down' | 'up';
+  class?: string;
+}
+
+const { locale, placement = 'down', class: className } = Astro.props;
+const ui = getNovaCopy(locale);
+const listId = `cv-menu-${placement}`;
+const heading = { fr: 'Choisir une version du CV', en: 'Choose a resume version' }[locale];
+---
+
+<div class:list={['pf-cv', className]} data-cv-menu data-placement={placement}>
+  <slot name="trigger">
+    <Button
+      type="button"
+      variant="outline"
+      size="lg"
+      class="min-h-11 w-full font-semibold sm:w-auto"
+      data-cv-trigger
+      aria-haspopup="true"
+      aria-expanded="false"
+      aria-controls={listId}
+    >
+      <i slot="icon-left" class="ph ph-download-simple text-lg" aria-hidden="true"></i>
+      {ui.hero.downloadCv}
+      <span slot="icon-right" class="inline-flex"><svg class="pf-cv__caret" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6"/></svg></span>
+    </Button>
+  </slot>
+
+  <div id={listId} class="pf-cv__panel" hidden>
+    <p class="pf-cv__heading">{heading}</p>
+    <ul class="pf-cv__list">
+      {profile.cvVersions.map((cv) => (
+        <li>
+          <a
+            href={cvFile(cv.id, locale)}
+            class="pf-cv__item"
+            download={`${locale === 'fr' ? 'CV' : 'Resume'}_Yassir_Drissi_${cv.id}.pdf`}
+          >
+            <i class="ph ph-file-pdf pf-cv__icon" aria-hidden="true"></i>
+            <span class="pf-cv__text">
+              <span class="pf-cv__title">{cv.label[locale]}</span>
+              <span class="pf-cv__desc">{cv.description[locale]}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style is:global>
+  .pf-cv {
+    position: relative;
+    display: inline-block;
+  }
+
+  @media (max-width: 639px) {
+    .pf-cv {
+      display: block;
+      width: 100%;
+    }
+  }
+
+  .pf-cv__panel {
+    position: absolute;
+    z-index: 200;
+    width: min(22rem, calc(100vw - 2.5rem));
+    padding: 0.5rem;
+    border: 1px solid var(--color-outline-variant);
+    border-radius: 1rem;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    box-shadow: 0 18px 48px rgb(0 0 0 / 0.22);
+  }
+
+  .pf-cv__panel[hidden] {
+    display: none;
+  }
+
+  .pf-cv__heading {
+    margin: 0;
+    padding: 0.5rem 0.75rem 0.25rem;
+    color: var(--color-on-surface-variant);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .pf-cv__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pf-cv__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 0.75rem;
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 150ms ease;
+  }
+
+  .pf-cv__item:hover,
+  .pf-cv__item:focus-visible {
+    background: var(--color-surface-container-low);
+    outline: none;
+  }
+
+  .pf-cv__item:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--color-brand-accent);
+  }
+
+  .pf-cv__icon {
+    flex: none;
+    margin-top: 0.1rem;
+    color: var(--color-brand-accent);
+    font-size: 1.4rem;
+  }
+
+  .pf-cv__text {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .pf-cv__title {
+    font-weight: 600;
+  }
+
+  .pf-cv__desc {
+    color: var(--color-on-surface-variant);
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  .pf-cv__caret {
+    transition: transform 200ms ease;
+  }
+
+  [data-cv-trigger][aria-expanded='true'] .pf-cv__caret {
+    transform: rotate(180deg);
+  }
+</style>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    if (window.__pfCvMenu) return;
+    window.__pfCvMenu = true;
+
+    function panelOf(trigger) {
+      return document.getElementById(trigger.getAttribute('aria-controls'));
+    }
+
+    function close(trigger) {
+      var panel = panelOf(trigger);
+      if (panel) panel.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    function closeAll(except) {
+      document.querySelectorAll('[data-cv-trigger]').forEach(function (t) {
+        if (t !== except) close(t);
+      });
+    }
+
+    // Le panneau est placé dans <body> : le hero a overflow:hidden et des animations qui
+    // créent des contextes d'empilement, ce qui le masquerait ou le recouvrirait.
+    function open(trigger, byKeyboard) {
+      var panel = panelOf(trigger);
+      if (!panel) return;
+      if (panel.parentElement !== document.body) document.body.appendChild(panel);
+      panel.hidden = false;
+      var r = trigger.getBoundingClientRect();
+      var pw = panel.offsetWidth;
+      var ph = panel.offsetHeight;
+      var spaceBelow = window.innerHeight - r.bottom;
+      var below = spaceBelow >= ph + 16 || spaceBelow >= r.top;
+      var top = below ? r.bottom + 8 : r.top - ph - 8;
+      var left = Math.min(Math.max(12, r.left), window.innerWidth - pw - 12);
+      panel.style.top = Math.max(8, top) + window.scrollY + 'px';
+      panel.style.left = left + window.scrollX + 'px';
+      trigger.setAttribute('aria-expanded', 'true');
+      if (byKeyboard) {
+        var first = panel.querySelector('a');
+        if (first) first.focus();
+      }
+    }
+
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+      var trigger = target.closest && target.closest('[data-cv-trigger]');
+      if (trigger) {
+        var wasOpen = trigger.getAttribute('aria-expanded') === 'true';
+        closeAll(trigger);
+        if (wasOpen) close(trigger);
+        else open(trigger, event.detail === 0);
+        return;
+      }
+      // Clic sur un choix : le téléchargement démarre, on referme la liste.
+      // Clic ailleurs : on referme aussi (sauf dans le panneau lui-même).
+      if (target.closest && target.closest('.pf-cv__panel') && !target.closest('.pf-cv__item')) return;
+      setTimeout(function () { closeAll(null); }, 0);
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape') return;
+      var opened = document.querySelector('[data-cv-trigger][aria-expanded="true"]');
+      if (!opened) return;
+      close(opened);
+      opened.focus();
+    });
+
+    window.addEventListener('resize', function () { closeAll(null); });
+  })();
+</script>

@@ -6,6 +6,7 @@ import Container from '@components/ui/layout/Container.astro';
 import Heading from '@components/ui/atoms/Heading.astro';
 import Text from '@components/ui/atoms/Text.astro';
 import Button from '@components/ui/atoms/Button.astro';
+import CvMenu from './CvMenu.astro';
 import { profile } from '@data/portfolio/profile';
 import { organizations, stats } from '@data/portfolio/highlights';
 import { getNovaCopy, getNovaLocalePath, type NovaLocale } from '@utils/nova-i18n';
@@ -44,10 +45,7 @@ const intro = {
           <Text variant="lead" class="max-w-[38rem] text-[clamp(1rem,1.5vw,1.2rem)]">{intro}</Text>
           <div class="flex flex-wrap items-center gap-3">
             <Button href={`${getNovaLocalePath(locale)}#projets`} variant="primary" size="lg" class="min-h-11 w-full font-semibold sm:w-auto">{ui.hero.seeProjects}</Button>
-            <Button href={profile.cv[locale]} variant="outline" size="lg" class="min-h-11 w-full font-semibold sm:w-auto" download="">
-              <i slot="icon-left" class="ph ph-download-simple text-lg" aria-hidden="true"></i>
-              {ui.hero.downloadCv}
-            </Button>
+            <CvMenu locale={locale} placement="down" class="w-full sm:w-auto" />
           </div>
           <p class="m-0 flex items-center gap-2 text-sm ui-text-on-light-subtle">
             <i class="ph ph-map-pin text-base" aria-hidden="true"></i>

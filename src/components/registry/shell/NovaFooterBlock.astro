@@ -4,6 +4,7 @@
 import Text from "@components/ui/atoms/Text.astro";
 import { getNovaCopy, getNovaNavigationPath, type NovaLocale } from "@utils/nova-i18n";
 import { profile } from "@data/portfolio/profile";
+import CvMenu from "@components/portfolio/CvMenu.astro";
 
 interface Props {
   locale?: NovaLocale;
@@ -23,7 +24,6 @@ const directLinks = [
   { href: profile.links.linkedin, icon: "linkedin-logo", label: "LinkedIn", external: true },
   { href: profile.links.github, icon: "github-logo", label: "GitHub", external: true },
   { href: profile.links.spotify, icon: "spotify-logo", label: "EngiTalks · Spotify", external: true },
-  { href: profile.cv[locale], icon: "file-arrow-down", label: ui.hero.downloadCv, external: false, download: true },
 ];
 ---
 
@@ -53,6 +53,23 @@ const directLinks = [
               </a>
             </li>
           ))}
+          <li>
+            <CvMenu locale={locale} placement="up" class="w-full">
+              <button
+                slot="trigger"
+                type="button"
+                class="pf-contact__link pf-contact__link--button"
+                data-cv-trigger
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-controls="cv-menu-up"
+              >
+                <i class="ph ph-file-arrow-down text-xl" aria-hidden="true"></i>
+                <span class="min-w-0 truncate">{ui.hero.downloadCv}</span>
+                <svg class="pf-cv__caret ml-auto" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6"/></svg>
+              </button>
+            </CvMenu>
+          </li>
         </ul>
       </div>
 
@@ -191,6 +208,15 @@ const directLinks = [
 
   @keyframes pf-pulse {
     to { box-shadow: 0 0 0 0.6rem rgb(34 197 94 / 0); }
+  }
+
+  .pf-contact__link--button {
+    width: 100%;
+    background: transparent;
+    font: inherit;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
   }
 
   .pf-contact__link {

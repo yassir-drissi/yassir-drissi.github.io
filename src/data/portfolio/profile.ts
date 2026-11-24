@@ -39,11 +39,45 @@ export const profile = {
     en: 'Portrait of Yassir Drissi',
   } satisfies L,
 
-  /** CV : fichiers dans public/cv/. Le bon fichier est proposé selon la langue. */
-  cv: {
-    fr: '/cv/CV_DRISSI_YASSIR.pdf',
-    en: '/cv/RESUME_DRISSI_YASSIR.pdf',
-  } satisfies L,
+  /**
+   * CV : une version par profil, dans public/cv/<id>/ (CV_DRISSI_YASSIR.pdf en français,
+   * RESUME_DRISSI_YASSIR.pdf en anglais). Le bouton « Télécharger mon CV » affiche cette liste ;
+   * la langue du site choisit le fichier. Le premier de la liste est le CV généraliste.
+   */
+  cvVersions: [
+    {
+      id: 'standard',
+      label: { fr: 'CV généraliste', en: 'General resume' } satisfies L,
+      description: {
+        fr: 'Machine Learning, vision par ordinateur, IA générative, pipelines de données',
+        en: 'Machine Learning, computer vision, generative AI, data pipelines',
+      } satisfies L,
+    },
+    {
+      id: 'ia',
+      label: { fr: 'Intelligence artificielle', en: 'Artificial intelligence' } satisfies L,
+      description: {
+        fr: 'Computer Vision, NLP, Deep Learning, déploiement de modèles',
+        en: 'Computer Vision, NLP, Deep Learning, model deployment',
+      } satisfies L,
+    },
+    {
+      id: 'data-engineer',
+      label: { fr: 'Data Engineering', en: 'Data Engineering' } satisfies L,
+      description: {
+        fr: 'Pipelines de données, orchestration, conteneurisation Docker',
+        en: 'Data pipelines, orchestration, Docker containerisation',
+      } satisfies L,
+    },
+    {
+      id: 'data-science',
+      label: { fr: 'Data Science', en: 'Data Science' } satisfies L,
+      description: {
+        fr: 'Machine Learning explicable, modélisation du risque (crédit, longévité)',
+        en: 'Explainable Machine Learning, risk modelling (credit, longevity)',
+      } satisfies L,
+    },
+  ],
 
   /**
    * Formulaire de contact (Web3Forms, sans backend).
@@ -58,3 +92,8 @@ export const profile = {
     { name: { fr: 'Anglais', en: 'English' }, level: { fr: 'intermédiaire', en: 'intermediate' } },
   ] satisfies Array<{ name: L; level: L }>,
 };
+
+/** Chemin du PDF d'une version de CV dans la langue donnée. */
+export function cvFile(id: string, locale: 'fr' | 'en'): string {
+  return `/cv/${id}/${locale === 'fr' ? 'CV_DRISSI_YASSIR' : 'RESUME_DRISSI_YASSIR'}.pdf`;
+}
