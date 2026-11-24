@@ -30,8 +30,17 @@ export const project: Project = {
   ],
   stack: ['Python', 'scikit-learn', 'XGBoost', 'CatBoost', 'SHAP', 'FastAPI', 'Next.js', 'Docker'],
   links: {},
-  // Pas de compte de test : schéma d'architecture à la place des captures de l'application.
+  // Pas de compte de test : visuel de présentation de l'application, puis schéma d'architecture.
   images: [
+    {
+      src: '/images/projets/scoring-app.webp',
+      width: 1453,
+      height: 720,
+      alt: {
+        fr: "Credit Risk App : accueil, décision de crédit avec facteurs d'influence, analyse des 7 modèles et détail du dossier saisi",
+        en: 'Credit Risk App: home page, credit decision with influencing factors, analysis of the 7 models and details of the submitted file',
+      },
+    },
     {
       src: '/images/projets/scoring-architecture.svg',
       width: 1600,
