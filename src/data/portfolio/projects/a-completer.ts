@@ -6,43 +6,137 @@ import type { Project } from './types';
 
 const todoImprove = { fr: ['TODO : ce que tu améliorerais'], en: ['TODO: what you would improve'] };
 
+// Alzheimer : sources = Alzhaimer_CNN_ProjetControle.pdf (rapport du module Deep Learning, S8, 2025-2026)
+// et Detection_Alzehaimer_and_Classification_Deep_Learning.pptx (figures).
+// Les résultats affichés sont ceux mesurés dans le notebook (matrice de confusion, rapport de classification,
+// log d'entraînement). La conclusion du rapport et la diapositive de résultats annoncent 96,47 % d'exactitude :
+// ces chiffres ne correspondent à aucune sortie du notebook, ils ne sont donc pas repris ici.
 export const alzheimer: Project = {
   slug: 'detection-alzheimer-irm',
-  // Masqué : aucun notebook ni rapport retrouvé, donc pas de résultat chiffré.
-  draft: true,
   order: 10,
   category: 'vision',
-  year: 'TODO',
+  year: '2025-2026',
   title: { fr: "Détection d'Alzheimer sur IRM", en: "Alzheimer's detection on MRI" },
-  context: { fr: 'TODO : contexte (école, projet personnel…)', en: 'TODO: context (school, personal project…)' },
+  context: {
+    fr: 'Contrôle du module Deep Learning (S8) · EMSI Rabat · encadré par Pr. Said Benlakhdar',
+    en: 'Deep Learning course assessment (S8) · EMSI Rabat · supervised by Pr. Said Benlakhdar',
+  },
   problem: {
-    fr: 'Classer des IRM cérébrales selon le stade de la maladie d’Alzheimer.',
-    en: 'Classify brain MRI scans by Alzheimer’s disease stage.',
+    fr: 'Classer des IRM cérébrales selon le stade de la maladie d’Alzheimer, avec un modèle dont on peut visualiser les zones de décision.',
+    en: 'Classify brain MRI scans by Alzheimer’s disease stage, with a model whose decision regions can be visualised.',
   },
   did: {
     fr: 'CNN conçu de zéro, pondération des classes et cartes Grad-CAM pour visualiser les zones utilisées par le modèle.',
     en: 'CNN designed from scratch, class weighting and Grad-CAM maps to show which regions the model relies on.',
   },
-  result: { fr: 'TODO : résultat chiffré (justesse, F1 par stade…)', en: 'TODO: quantified result (accuracy, per-stage F1…)' },
-  stack: ['TensorFlow', 'CNN', 'Grad-CAM', 'Python'],
+  result: {
+    fr: '56 % d’exactitude sur 1 280 IRM de test (4 stades, hasard = 25 %) : une première base de référence. La classe rare « démence modérée » n’est jamais détectée.',
+    en: '56% accuracy on 1,280 test MRI scans (4 stages, chance = 25%): a first baseline. The rare “moderate dementia” class is never detected.',
+  },
+  metrics: [
+    { value: '56 %', label: { fr: 'd’exactitude sur 1 280 IRM de test (hasard : 25 %)', en: 'accuracy on 1,280 test scans (chance: 25%)' } },
+    { value: '6 400', label: { fr: 'IRM réparties en 4 stades', en: 'MRI scans across 4 stages' } },
+    { value: '1,3 M', label: { fr: 'de paramètres, CNN conçu de zéro', en: 'parameters, CNN built from scratch' } },
+  ],
+  stack: ['Python', 'TensorFlow', 'Keras', 'CNN', 'Grad-CAM', 'scikit-learn', 'OpenCV'],
   links: {},
+  images: [
+    {
+      src: '/images/projets/alzheimer-echantillons.webp',
+      width: 1600,
+      height: 650,
+      alt: {
+        fr: "Exemples d'IRM cérébrales augmentées du jeu d'entraînement, avec leur stade",
+        en: 'Examples of augmented brain MRI scans from the training set, with their stage',
+      },
+    },
+    {
+      src: '/images/projets/alzheimer-architecture.webp',
+      width: 2000,
+      height: 724,
+      alt: {
+        fr: 'Architecture du CNN : 4 blocs convolutifs (32, 64, 128 puis 256 filtres), pooling global moyen et couche de sortie à 4 classes',
+        en: 'CNN architecture: 4 convolutional blocks (32, 64, 128 then 256 filters), global average pooling and a 4-class output layer',
+      },
+    },
+    {
+      src: '/images/projets/alzheimer-courbes.webp',
+      width: 1724,
+      height: 617,
+      alt: {
+        fr: "Courbes d'apprentissage sur 50 époques : exactitude et perte, entraînement et validation",
+        en: 'Learning curves over 50 epochs: accuracy and loss, training and validation',
+      },
+    },
+    {
+      src: '/images/projets/alzheimer-matrice.webp',
+      width: 648,
+      height: 512,
+      alt: {
+        fr: 'Matrice de confusion sur le jeu de test : la classe « démence modérée » n’est jamais prédite',
+        en: 'Confusion matrix on the test set: the “moderate dementia” class is never predicted',
+      },
+    },
+  ],
   details: {
     problem: {
-      fr: 'Le diagnostic précoce d’Alzheimer aide la prise en charge. Le projet cherche à distinguer 4 stades de la maladie à partir d’IRM, en gardant le modèle interprétable.',
-      en: 'Early diagnosis of Alzheimer’s helps patient care. The project aims to tell apart 4 disease stages from MRI scans while keeping the model interpretable.',
+      fr: "Plus de 55 millions de personnes vivent avec une démence dans le monde (OMS). L'analyse manuelle des IRM est longue et varie d'un radiologue à l'autre. Le projet cherche à classer automatiquement les IRM en 4 stades (non dément, démence très légère, légère, modérée), en gardant le modèle interprétable grâce à Grad-CAM.",
+      en: 'More than 55 million people live with dementia worldwide (WHO). Reading MRI scans by hand is slow and varies between radiologists. The project aims to classify scans automatically into 4 stages (non-demented, very mild, mild, moderate dementia), keeping the model interpretable with Grad-CAM.',
     },
-    data: { fr: ['6 400 IRM réparties en 4 stades'], en: ['6,400 MRI scans across 4 stages'] },
-    approach: {
-      fr: ['CNN conçu de zéro avec TensorFlow', 'Pondération des classes pour compenser leur déséquilibre', 'Grad-CAM pour visualiser les régions qui influencent la prédiction'],
-      en: ['CNN built from scratch with TensorFlow', 'Class weighting to offset class imbalance', 'Grad-CAM to visualise the regions driving each prediction'],
-    },
-    results: { fr: ['TODO : résultats chiffrés'], en: ['TODO: quantified results'] },
-    improve: {
+    data: {
       fr: [
-        "Valider le modèle sur un jeu externe, en séparant les images par patient pour éviter les fuites entre entraînement et test",
+        'Jeu Alzheimer MRI (Falah/Alzheimer_MRI sur Hugging Face) : 5 120 images d’entraînement et 1 280 de test, soit 6 400 IRM',
+        'Fort déséquilibre à l’entraînement : 2 566 non déments (50,1 %), 1 781 très légers (34,8 %), 724 légers (14,1 %) et 49 modérés (1,0 %)',
+        'Images de 176×176 pixels ; 4 098 images d’entraînement et 1 022 de validation après découpage',
       ],
       en: [
-        "Validate the model on an external dataset, splitting images by patient to avoid leakage between training and test",
+        'Alzheimer MRI dataset (Falah/Alzheimer_MRI on Hugging Face): 5,120 training and 1,280 test images, i.e. 6,400 scans',
+        'Strong class imbalance in training: 2,566 non-demented (50.1%), 1,781 very mild (34.8%), 724 mild (14.1%) and 49 moderate (1.0%)',
+        '176×176 pixel images; 4,098 training and 1,022 validation images after splitting',
+      ],
+    },
+    approach: {
+      fr: [
+        'CNN conçu de zéro avec TensorFlow : 4 blocs convolutifs (32, 64, 128, 256 filtres) avec normalisation par lots et dropout, pooling global moyen, couche dense de 512 neurones, soit 1 311 780 paramètres',
+        'Augmentation des images (rotation, retournement, zoom, luminosité)',
+        'Pondération des classes pour compenser le déséquilibre (jusqu’à 25,6 pour la classe modérée)',
+        'Entraînement sur 50 époques avec Adam, arrêt anticipé, réduction du taux d’apprentissage et sauvegarde du meilleur modèle',
+        'Grad-CAM pour visualiser les régions qui influencent chaque prédiction',
+      ],
+      en: [
+        'CNN built from scratch with TensorFlow: 4 convolutional blocks (32, 64, 128, 256 filters) with batch normalisation and dropout, global average pooling, a 512-unit dense layer, for 1,311,780 parameters',
+        'Image augmentation (rotation, flipping, zoom, brightness)',
+        'Class weighting to offset the imbalance (up to 25.6 for the moderate class)',
+        'Training over 50 epochs with Adam, early stopping, learning-rate reduction and best-model checkpointing',
+        'Grad-CAM to visualise the regions driving each prediction',
+      ],
+    },
+    results: {
+      fr: [
+        'Exactitude de 56 % sur les 1 280 IRM de test (F1 pondéré 0,54, F1 macro 0,34), contre 25 % pour un tirage au hasard',
+        'Meilleure exactitude de validation : 59,5 % à l’époque 49',
+        'Non déments : 69 % bien reconnus (438 sur 634). Les confusions viennent surtout des stades voisins : 130 démences légères prédites très légères, 189 non déments prédits très légers',
+        'Démence modérée : aucune des 15 IRM de test détectée, avec seulement 49 exemples à l’entraînement',
+        'Courbes de validation instables : le modèle reste une base de référence, insuffisante pour un usage clinique',
+      ],
+      en: [
+        '56% accuracy on the 1,280 test scans (weighted F1 0.54, macro F1 0.34), versus 25% for random guessing',
+        'Best validation accuracy: 59.5% at epoch 49',
+        'Non-demented: 69% correctly recognised (438 of 634). Most confusion is between neighbouring stages: 130 mild cases predicted very mild, 189 non-demented predicted very mild',
+        'Moderate dementia: none of the 15 test scans detected, with only 49 training examples',
+        'Unstable validation curves: the model stays a baseline, not sufficient for clinical use',
+      ],
+    },
+    improve: {
+      fr: [
+        'Partir d’un modèle pré-entraîné (EfficientNet ou ResNet) plutôt que d’un CNN conçu de zéro',
+        'Mieux traiter la classe rare : poids de classe plafonné autour de 10 et suréchantillonnage, car un poids de 25,6 rend l’entraînement instable',
+        "Entraîner sur GPU pour explorer plus d'hyperparamètres, et valider sur un jeu externe en séparant les images par patient pour éviter les fuites entre entraînement et test",
+      ],
+      en: [
+        'Start from a pre-trained model (EfficientNet or ResNet) instead of a CNN built from scratch',
+        'Handle the rare class better: cap the class weight around 10 and oversample, since a weight of 25.6 makes training unstable',
+        'Train on a GPU to explore more hyperparameters, and validate on an external dataset, splitting images by patient to avoid leakage between training and test',
       ],
     },
   },
