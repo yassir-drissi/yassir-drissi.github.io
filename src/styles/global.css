@@ -12,3 +12,21 @@
 /* Override'y per-theme na koncu: najpierw musi wladowac sie root Tailwinda,
    zeby kolejnosc warstw (theme, base, components, utilities) byla wlasciwa. */
 @import "./theme-overrides.css";
+
+/* Lien d'évitement « Aller au contenu » : invisible, il n'apparaît qu'au clavier (Tab),
+   pour les personnes qui naviguent sans souris. */
+.pf-skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #0b1220;
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+.pf-skip-link:focus {
+  transform: none;
+}
